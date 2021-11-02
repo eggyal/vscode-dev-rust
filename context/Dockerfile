@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/rust:1-bullseye@sha256:c1301900b1ed652616b89c57db16c7e3172afbf3ea54ed51d74bcc62a520286e AS base
+FROM mcr.microsoft.com/vscode/devcontainers/rust:1-bullseye@sha256:15bb5f3481935669985c917b8d613966c601d20601a4bdd219d770739a7a17a1 AS base
 
 FROM base AS mold
 COPY mold.build-packages mold.url /tmp/
