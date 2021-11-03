@@ -2,6 +2,9 @@
 
 set -eu
 
+RESTORE_UID=$(stat -c %u .)
+sudo chown -R "$UID" .
+
 git config --global user.email "eggyal+update.bot@gmail.com"
 git config --global user.name "Update Bot"
 
@@ -25,5 +28,6 @@ git add -A
 git diff-index --quiet HEAD \
     || git commit -qm 'Update mold'
 
-# git push & open PR
+sudo chown -R "$RESTORE_UID" .
+
 exit 0
