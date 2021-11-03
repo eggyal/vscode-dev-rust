@@ -12,7 +12,7 @@ RUN mkdir ~/mold \
     && make -j$(nproc) \
     && sudo make install
 
-FROM base
+FROM base AS dev
 RUN apt-get autoremove -y
 USER vscode
 COPY Cargo.toml /tmp/
