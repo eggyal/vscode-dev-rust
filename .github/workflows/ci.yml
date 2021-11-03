@@ -76,7 +76,7 @@ jobs:
 
       - name: Generate GitHub token
         if: ${{ github.event_name == 'cron' }}
-        uses: tibdex/github-app-token@cdb5bfda87db263e4be5c6f570c4c39611ee952a # renovate: v1.4.0
+        uses: tibdex/github-app-token@516ef6015c38a575a3cc87e8840c79350e0238e9
         id: generate-token
         with:
           app_id: ${{ secrets.PR_APP_ID }}
