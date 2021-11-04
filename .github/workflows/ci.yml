@@ -34,16 +34,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Fetch base image
+      - name: Fetch base
+        if: ${{ github.event_name != 'release' }}
         id: base
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
         with:
           context: .
-          target: base
           builder: ${{ steps.buildx.outputs.name }}
-          tags: base
-          cache-from: type=local,src=/tmp/.buildx-cache
           load: true
+          tags: base
+          target: base
+          cache-from: type=local,src=/tmp/.buildx-cache
 
       - name: Build (and, if a release, push to Docker Hub)
         if: ${{ github.event_name != 'cron' }}
@@ -59,16 +60,7 @@ jobs:
 
       - name: Determine Updates
         if: ${{ github.event_name != 'release' }}
-        run: >
-          docker run
-          -e MOLD_GITHUB_REPO="rui314/mold"
-          -e MOLD_TARBALL_URL="mold.url"
-          -e MOLD_BUILD_DEPS="mold.build-packages"
-          -u vscode
-          -v ${{ github.workspace }}:/workspace
-          -w /workspace
-          base
-          /workspace/update.sh
+        run: docker-compose up --exit-code-from update
 
       - name: Move cache
         if: ${{ github.event_name == 'push' }}
