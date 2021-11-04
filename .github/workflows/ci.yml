@@ -71,12 +71,13 @@ jobs:
           /workspace/update.sh
 
       - name: Move cache
+        if: ${{ github.event_name == 'push' || github.event_name == 'cron' }}
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache{-new,}
 
       - name: Generate GitHub token
-        if: ${{ github.event_name != 'release' }}
+        if: ${{ github.event_name == 'cron' }}
         uses: tibdex/github-app-token@cdb5bfda87db263e4be5c6f570c4c39611ee952a # renovate: tag=v1.4.0
         id: generate-token
         with:
@@ -84,7 +85,7 @@ jobs:
           private_key: ${{ secrets.PR_PRIVATE_KEY }}
 
       - name: Create Pull Request
-        if: ${{ github.event_name != 'release' }}
+        if: ${{ github.event_name == 'cron' }}
         uses: peter-evans/create-pull-request@7380612b49221684fefa025244f2ef4008ae50ad # renovate: tag=v3.10.1
         with:
           token: ${{ steps.generate-token.outputs.token }}
