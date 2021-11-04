@@ -17,6 +17,8 @@ This container builds upon [VS Code's official Rust development container](https
 
 The built image is [available on Docker Hub](https://hub.docker.com/repository/docker/eggyal/vscode-dev-rust).
 
+The principle motivations for defining this container separately from individual projects are to promote reuse, achieve stable/reproducible environments and maximize dev-parity with CI environments.
+
 ## Example usage
 
 Set your project's `devcontainer.json` as follows (updating `my-project` as appropriate):
