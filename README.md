@@ -58,7 +58,7 @@ Set your project's `devcontainer.json` as follows (updating `my-project` as appr
   // See https://code.visualstudio.com/remote/advancedcontainers/improve-performance#_use-a-targeted-named-volume
   "mounts": [
     "source=my-project-dev-target,target=${containerWorkspaceFolder}/target,type=volume",
-  ]
+  ],
 
   // Set permissions on mounted target volume, and trivially invoke rustc to
   // install specific toolchain required by project's toolchain file (if any).
