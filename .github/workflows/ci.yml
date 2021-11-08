@@ -11,24 +11,41 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25 # renovate: tag=v1.6.0
 
-      - name: Fetch base
+      - name: Determine effective user and group
+        id: effective-user
+        run: |
+          echo "::set-output name=uid::$(id -u)"
+          echo "::set-output name=gid::$(id -g)"
+
+      # Build "base" in order to load its image into Docker from the buildx
+      # cache, so that the update script can then be run upon it.
+      - name: Build base
         id: base
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
         with:
-          builder: ${{ steps.buildx.outputs.name }}
-          load: true
-          tags: base
+          context: .devcontainer
+          build-args: |
+            USER_UID=${{ steps.effective-user.outputs.uid }}
+            USER_GID=${{ steps.effective-user.outputs.gid }}
           target: base
+          tags: base
+          builder: ${{ steps.buildx.outputs.name }}
           cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
+          load: true
 
-      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-
+      # Run the update script on pull requests and pushes to main in order to
+      # confirm that it has not been broken; only `cron` events will use the
+      # results (opening a PR, if there are updates)--all else will discard it
+      # in the `Reset` step.
       - name: Determine Updates
-        run: docker-compose up --exit-code-from update
+        run: docker run -v ${{ github.workspace }}:/workspace base /workspace/.devcontainer/update.sh
 
       - name: Generate GitHub token
         if: ${{ github.event_name == 'cron' }}
@@ -47,6 +64,10 @@ jobs:
           delete-branch: true
           title: 'Update mold'
 
+      - name: Reset
+        if: ${{ github.event_name != 'cron' }}
+        run: git reset --hard ${{ github.sha }}
+
       - name: Login to DockerHub
         if: ${{ github.event_name == 'push' }}
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # renovate: tag=v1.10.0
@@ -59,8 +80,9 @@ jobs:
         id: build
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
         with:
+          context: .devcontainer
           builder: ${{ steps.buildx.outputs.name }}
-          push: ${{ github.event_name == 'push' }}
-          tags: ${{ github.repository }}:1-bullseye
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
+          tags: ${{ github.repository }}:1-bullseye
+          push: ${{ github.event_name == 'push' }}

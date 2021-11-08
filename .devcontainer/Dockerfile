@@ -1,7 +1,12 @@
 FROM mcr.microsoft.com/vscode/devcontainers/rust:1-bullseye@sha256:15bb5f3481935669985c917b8d613966c601d20601a4bdd219d770739a7a17a1 AS base
+ARG USER_UID=1000
+ARG USER_GID="$USER_UID"
+RUN sudo groupmod --gid "$USER_GID" vscode \
+    && sudo usermod --uid "$USER_UID" --gid "$USER_GID" vscode \
+    && sudo chown -R "$USER_UID":"$USER_GID" /home/vscode
 
 FROM base AS mold
-COPY mold.build-packages mold.url /tmp/
+COPY build-context/mold.build-packages build-context/mold.url /tmp/
 RUN apt-get update \
     && xargs -a /tmp/mold.build-packages apt-get -y install --no-install-recommends \
     && rm /tmp/mold.build-packages
@@ -15,7 +20,7 @@ RUN mkdir ~/mold \
 FROM base AS dev
 RUN apt-get autoremove -y
 USER vscode
-COPY Cargo.toml /tmp/
+COPY build-context/Cargo.toml /tmp/
 RUN awk -F' = ' '/ = /{print $2 " " $1}' /tmp/Cargo.toml | xargs -n2 -P$(nproc) cargo install --locked --version \
     && sudo rm -rf /tmp/Cargo.toml "$CARGO_HOME/registry" \
     # && rustup toolchain list | awk '{print $1}' | xargs rustup uninstall \

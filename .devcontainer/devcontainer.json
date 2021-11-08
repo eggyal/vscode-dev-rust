@@ -1,0 +1,20 @@
+{
+    "name": "vscode-dev-rust-dev",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "build-context",
+        "args": {
+            "USER_UID": "${localEnv:EUID}",
+            "USER_GID": "${localEnv:EGID}",
+        }
+    },
+  
+    "extensions": [
+      "yzhang.markdown-all-in-one",
+      "eamodio.gitlens",
+      "streetsidesoftware.code-spell-checker",
+      "nhoizey.gremlins",
+    ],
+  
+    "remoteUser": "vscode",
+}
