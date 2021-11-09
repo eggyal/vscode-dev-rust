@@ -41,14 +41,14 @@ jobs:
           load: true
 
       # Run the update script on pull requests and pushes to main in order to
-      # confirm that it has not been broken; only `cron` events will use the
+      # confirm that it has not been broken; only `schedule` events will use the
       # results (opening a PR, if there are updates)--all else will discard it
       # in the `Reset` step.
       - name: Determine Updates
         run: docker run -v ${{ github.workspace }}:/workspace base /workspace/.devcontainer/update.sh
 
       - name: Generate GitHub token
-        if: ${{ github.event_name == 'cron' }}
+        if: ${{ github.event_name == 'schedule' }}
         uses: tibdex/github-app-token@cdb5bfda87db263e4be5c6f570c4c39611ee952a # renovate: tag=v1.4.0
         id: generate-token
         with:
@@ -56,7 +56,7 @@ jobs:
           private_key: ${{ secrets.PR_PRIVATE_KEY }}
 
       - name: Create Pull Request
-        if: ${{ github.event_name == 'cron' }}
+        if: ${{ github.event_name == 'schedule' }}
         uses: peter-evans/create-pull-request@67df31e08a133c6a77008b89689677067fef169e # renovate: tag=v3.11.0
         with:
           token: ${{ steps.generate-token.outputs.token }}
@@ -65,7 +65,7 @@ jobs:
           title: 'Update mold'
 
       - name: Reset
-        if: ${{ github.event_name != 'cron' }}
+        if: ${{ github.event_name != 'schedule' }}
         run: git reset --hard ${{ github.sha }}
 
       - name: Login to DockerHub
@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build (and, if a release, push to Docker Hub)
-        if: ${{ github.event_name != 'cron' }}
+        if: ${{ github.event_name != 'schedule' }}
         id: build
         uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2.7.0
         with:
