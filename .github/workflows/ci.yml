@@ -44,7 +44,7 @@ jobs:
           tags: base
           builder: ${{ steps.buildx.outputs.name }}
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
           load: true
 
       # Run the update script on pull requests and pushes to main in order to
