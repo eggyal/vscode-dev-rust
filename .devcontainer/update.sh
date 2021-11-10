@@ -12,8 +12,8 @@ cd -- "$( dirname -- "${BASH_SOURCE[0]}" )"
 git config --global user.email "eggyal+update.bot@gmail.com"
 git config --global user.name "Update Bot"
 
-$(
-    unlink "$BUILD_CONTEXT/$MOLD_BUILD_DEPS";
+(
+    unlink "$BUILD_CONTEXT/$MOLD_BUILD_DEPS"
     update-scripts/latest-packages.sh > "$BUILD_CONTEXT/$MOLD_BUILD_DEPS"
 ) < "$BUILD_CONTEXT/$MOLD_BUILD_DEPS"
 
