@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/rust:1-bullseye@sha256:15bb5f3481935669985c917b8d613966c601d20601a4bdd219d770739a7a17a1 AS base
+FROM mcr.microsoft.com/vscode/devcontainers/rust:1-bullseye@sha256:7a4c4c8b4516b6360edcfe0e8eaefad01ac94542634504658e29b35f0b7ea600 AS base
 ARG USER_UID=1000
 ARG USER_GID="$USER_UID"
 RUN sudo groupmod --gid "$USER_GID" vscode \
