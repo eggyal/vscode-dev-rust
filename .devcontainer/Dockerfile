@@ -28,6 +28,6 @@ COPY build-context/Cargo.toml /tmp/
 RUN awk -F' = ' '/ = /{print $2 " " $1}' /tmp/Cargo.toml | xargs -n2 -P$(nproc) cargo install --locked --version \
     && sudo rm -rf /tmp/Cargo.toml "$CARGO_HOME/registry" \
     # && rustup toolchain list | awk '{print $1}' | xargs rustup uninstall \
-    && sudo install -m 755 -d /usr/{bin,lib}/mold
-COPY --from=mold /usr/bin/mold /usr/bin/mold/ld
-COPY --from=mold /usr/lib/mold /usr/lib/mold/
+    && sudo install -m 755 -d /usr/local/{bin,lib}/mold
+COPY --from=mold /usr/local/bin/mold /usr/local/bin/mold/ld
+COPY --from=mold /usr/local/lib/mold /usr/local/lib/mold/
