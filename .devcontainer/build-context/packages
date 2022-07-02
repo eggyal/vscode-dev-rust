@@ -1,7 +1,10 @@
 gdb=10.1-1.7
 libbabeltrace1=1.5.8-1+b3
 libboost-regex1.74.0=1.74.0-9
-libc6-dbg=2.31-13+deb11u2
+libc-dev-bin=2.31-13+deb11u3
+libc6=2.31-13+deb11u3
+libc6-dbg=2.31-13+deb11u3
+libc6-dev=2.31-13+deb11u3
 libdebuginfod1=0.183-1
 libdw1=0.183-1
 libipt2=2.0.3-1
