@@ -56,7 +56,7 @@ jobs:
 
       - name: Create Pull Request
         if: ${{ github.event_name == 'schedule' }}
-        uses: peter-evans/create-pull-request@67df31e08a133c6a77008b89689677067fef169e # renovate: tag=v3.11.0
+        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672 # v3.14.0
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update-mold
