@@ -1,5 +1,5 @@
 [dependencies]
-bacon = "1.2.4"
+bacon = "1.2.5"
 cargo-asm = "0.1.16"
 cargo-edit = "0.8.0"
 cargo-expand = "1.0.10"
