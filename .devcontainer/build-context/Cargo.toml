@@ -2,7 +2,7 @@
 bacon = "1.2.4"
 cargo-asm = "0.1.16"
 cargo-edit = "0.8.0"
-cargo-expand = "1.0.10"
+cargo-expand = "1.0.85"
 cargo-hack = "0.5.8"
 cargo-tree = "0.29.0"
 just = "0.10.4"
